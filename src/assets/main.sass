@@ -1,0 +1,94 @@
+@use 'sass:math'
+
+@import './base.sass'
+@import './quasar.sass'
+@import './transitions.sass'
+
+#app
+  margin: 0 auto
+  font-weight: 500
+
+.main-container
+  max-width: $breakpoint-lg-max
+  // margin: 0 auto
+
+h1
+  line-height: inherit !important
+
+a
+  color: black
+  cursor: pointer
+  text-decoration: underline
+  transition: 200ms ease-in-out
+  text-decoration-color: black
+  -webkit-text-decoration-color: $primary
+  -moz-text-decoration-color: $primary
+
+  &:hover
+    text-decoration-color: transparent
+    -webkit-text-decoration-color: transparent
+    -moz-text-decoration-color: transparent
+
+b
+  font-weight: medium
+
+.text-light-positive
+  color: #D2F7EF !important
+.bg-light-positive
+  background: #D2F7EF !important
+
+.text-light-warning
+  color: #FFFAD0 !important
+.bg-light-warning
+  background: #FFFAD0 !important
+
+.text-light-negative
+  color: #FFE0E0 !important
+.bg-light-negative
+  background: #FFE0E0 !important
+
+.text-subtitle1
+  text-transform: uppercase !important
+
+.text-subtitle2
+  color: $grey-8 !important
+
+.item-details
+  align-items: flex-start
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+  margin: 1.5rem 2rem 0rem 1.5rem
+  & > div
+    flex: 0 0 auto
+    margin-bottom: 1rem
+    width: 50%
+  @media all and (max-width: $breakpoint-sm-min)
+    flex-direction: column
+    & > div
+      width: 100%
+
+.card-grid
+  margin-bottom: 1rem
+  padding: 0 0.5rem
+  & > div
+    margin-bottom: 1rem
+
+.vel-img
+  background-color: white !important
+
+@for $i from 1 through 5
+  .border-#{$i}
+    border: #{$i}px solid $grey-7 !important
+
+@for $i from 1 through 50
+  .radius-#{$i}
+    border-radius: #{$i}px !important
+
+@for $i from 8 through 80
+  .fs#{$i}
+    font-size: math.div($i, 16) * 1rem !important
+
+@for $i from 1 through 10
+  .opacity-#{$i}
+    opacity: math.div($i, 10)

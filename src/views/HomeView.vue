@@ -20,7 +20,7 @@
   <q-footer elevated class="bg-grey-4 q-pa-md">
     <q-toolbar>
       <q-toolbar-title>
-        <p>&copy; 2025 CW Convites. All Rights Reserved.</p>
+        <p class="fs12 text-black">&copy; 2025 CW Convites. All Rights Reserved.</p>
       </q-toolbar-title>
 
       <a href="https://www.wanderson37.dev" target="_blank">

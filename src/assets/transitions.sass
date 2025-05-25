@@ -1,0 +1,15 @@
+.slideX-enter-active,
+.slideY-enter-active
+  transition: all 1s ease
+
+.slideX-leave-active,
+.slideY-leave-active
+  transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1)
+
+.slideX-enter-from, .slideX-leave-to
+  transform: translateX(30px)
+  opacity: 0
+
+.slideY-enter-from, .slideY-leave-to
+  transform: translateY(30px)
+  opacity: 0

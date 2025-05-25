@@ -1,0 +1,106 @@
+.q-checkbox
+  &__label
+    font-size: 0.875rem !important
+
+  &__bg
+    border: 1px solid #CFD3E3 !important
+    border-radius: 4px !important
+
+.q-chip
+  & > i.q-chip__icon--left
+    display: none !important
+
+// QInput, QSelect, QField
+.q-field__control
+  border-radius: 8px !important
+
+.q-layout-padding
+  padding: 1.5rem 2.5rem !important
+  @media all and ( max-width: $breakpoint-lg-min )
+    padding: 1.25rem 2rem !important
+  @media all and ( max-width: $breakpoint-md-min )
+    padding: 1rem 1.5rem !important
+  @media all and ( max-width: $breakpoint-sm-min )
+    padding: 0.75rem 1rem !important
+
+.q-stepper__header
+  flex-wrap: nowrap !important
+  overflow: scroll !important
+
+.q-tab
+  &-panel
+    @media all and (max-width: $breakpoint-sm-min)
+      padding: 0 !important
+  &__label
+    font-size: 1.125rem !important
+    font-weight: 500 !important
+
+.q-table
+  & thead th
+    font-weight: bold !important
+
+  td
+    font-weight: 500
+
+  &__top
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+    margin-bottom: 1rem
+    padding: 0px !important
+    width: 100%
+
+    @media all and (max-width: 777px)
+      align-items: center
+      flex-wrap: wrap
+
+    @media all and (max-width: 476px)
+      align-items: stretch
+      flex-direction: column
+      gap: 0.5rem
+
+    & > div:first-child:not(:only-child)
+      align-items: center
+      display: flex
+      flex-direction: row
+
+      & > *:not(:last-child)
+        margin-right: 0.5rem !important
+
+      @media all and (max-width: 777px)
+        align-items: stretch
+        flex-direction: column
+
+        & > *:not(:last-child)
+          margin-bottom: 0.5rem !important
+          margin-right: 0 !important
+
+    & > div:last-child:not(:only-child)
+      align-items: center
+      display: flex
+      flex-direction: row
+
+      & > *:not(:first-child)
+        margin-left: 0.5rem !important
+
+      @media all and (max-width: 777px)
+        align-items: stretch
+        flex-direction: column
+
+        & > *:not(:first-child)
+          margin-left: 0 !important
+          margin-top: 0.5rem !important
+
+    & > div:only-child
+      display: flex
+      flex-direction: row
+
+      & > *:not(:last-child)
+        margin-right: 0.5rem !important
+
+      @media all and (max-width: 777px), all and (max-width: 476px)
+        flex-direction: column
+
+        & > *:not(:last-child)
+          margin-right: 0 !important
+          margin-bottom: 0.5rem !important
