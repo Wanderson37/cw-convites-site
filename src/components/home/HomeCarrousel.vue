@@ -1,13 +1,14 @@
 <template>
   <q-carousel
     animated
-    v-model="slide"
-    navigation
-    infinite
-    :autoplay="autoplay"
     arrows
+    :autoplay="autoplay"
+    height="calc(100vh - 190px)"
+    infinite
+    thumbnails
     transition-prev="slide-right"
     transition-next="slide-left"
+    v-model="slide"
     @mouseenter="autoplay = false"
     @mouseleave="autoplay = true"
   >

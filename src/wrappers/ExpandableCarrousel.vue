@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Thumbnail Row -->
-    <div class="row items-center q-gutter-sm">
+    <div class="row items-center q-mb-md q-gutter-md">
       <div
         v-for="(item, idx) in items"
         :key="item.id"
@@ -12,6 +12,7 @@
           :src="item.thumbnail"
           :alt="item.title"
           :class="['thumbnail', expandedIndex === idx ? 'border-primary' : '']"
+          style="width: 10rem; height: 10rem"
         />
       </div>
     </div>
@@ -37,8 +38,8 @@
           arrows
           animated
           swipeable
-          class="shadow-1"
-          style="width: 60%; max-width: 400px"
+          class="rounded-borders shadow-1"
+          style="width: 400px"
         >
           <q-carousel-slide
             v-for="(slide, i) in items[expandedIndex].images"
@@ -50,10 +51,11 @@
 
         <!-- Details -->
         <div class="column q-pl-md" style="flex: 1">
-          <h6 class="text-h6">{{ props.items[expandedIndex]?.title }}</h6>
+          <h3>{{ props.items[expandedIndex]?.title }}</h3>
           <ul class="q-pl-md">
             <li v-for="(line, i) in props.items[expandedIndex]?.details" :key="i">{{ line }}</li>
           </ul>
+          <BaseInput dense v-model="inputValue"></BaseInput>
         </div>
       </div>
     </q-expansion-item>
@@ -79,9 +81,11 @@ const props = defineProps<{
 
 // State
 import type { Ref } from 'vue'
+import BaseInput from '@/wrappers/BaseInput.vue'
 const expandedIndex: Ref<number | null> = ref(null)
 const isOpen = ref(false)
 const carouselIndex = ref(0)
+const inputValue = ref('')
 
 // Methods
 function toggleExpand(idx: number) {
