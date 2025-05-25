@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh lpr fFf">
     <RouterView />
   </q-layout>
 </template>
