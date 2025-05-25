@@ -6,11 +6,12 @@
       </q-toolbar-title>
     </q-toolbar>
 
-    <q-tabs align="center" class="text-black">
+    <q-tabs align="center" class="text-black" active-color="primary" indicator-color="primary">
       <q-route-tab to="/" label="Home" />
       <q-route-tab to="/convites" label="Convites" />
       <q-route-tab to="" label="Caixas" />
       <q-route-tab to="" label="Papelaria" />
+      <q-route-tab to="" label="Sobre Nós" />
     </q-tabs>
   </q-header>
 

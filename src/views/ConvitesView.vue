@@ -1,7 +1,17 @@
 <template>
   <q-page>
     <div class="full-width q-pa-lg row">
-      <div>
+      <q-drawer
+        v-model="drawer"
+        class="q-pa-lg"
+        show-if-above
+        :mini="!drawer || miniState"
+        @click.capture="drawerClick"
+        :width="200"
+        :breakpoint="500"
+        bordered
+        :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'"
+      >
         <h3>Filtros</h3>
         <b>Tamanhos</b>
         <BaseOptionGroup v-model="filterOptions" :options="convitesOptionsSize" color="primary" />
@@ -25,7 +35,7 @@
         />
         <b>Tipo de Convite</b>
         <BaseOptionGroup v-model="filterOptions" :options="convitesOptionsTypes" color="primary" />
-      </div>
+      </q-drawer>
       <q-separator vertical class="q-mx-lg" />
       <div><ExpandableCarrousel :items="conviteStore.convites" /></div>
     </div>
@@ -36,7 +46,7 @@
 import { useConvitesStore } from '@/stores/convites'
 import BaseOptionGroup from '@/wrappers/BaseOptionGroup.vue'
 import ExpandableCarrousel from '@/wrappers/ExpandableCarrousel.vue'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const conviteStore = useConvitesStore()
 
@@ -62,6 +72,11 @@ const convitesOptionsTypes = [
   { label: 'Tradicional', value: 'tradicional' },
 ]
 const filterOptions = [{}]
+const miniState = ref(false)
+const drawer = ref(false)
+const drawerClick = () => {
+  miniState.value = !miniState.value
+}
 
 onMounted(async () => {
   await conviteStore.getConvites()

@@ -53,7 +53,15 @@
         <div class="column q-pl-md" style="flex: 1">
           <h3>{{ props.items[expandedIndex]?.title }}</h3>
           <ul class="q-pl-md">
-            <li v-for="(line, i) in props.items[expandedIndex]?.details" :key="i">{{ line }}</li>
+            <li v-for="(line, i) in props.items[expandedIndex]?.details" :key="i">
+              <b>Descrição: </b>{{ line }}
+            </li>
+            <li>
+              <b>Preço: </b>
+              <span class="text-primary">
+                R$ {{ props.items[expandedIndex]?.price.toFixed(2).replace('.', ',') }}
+              </span>
+            </li>
           </ul>
           <BaseInput dense v-model="inputValue"></BaseInput>
         </div>
