@@ -37,7 +37,7 @@
         <BaseOptionGroup v-model="filterOptions" :options="convitesOptionsTypes" color="primary" />
       </q-drawer>
       <q-separator vertical class="q-mx-lg" />
-      <div><ExpandableCarrousel :items="conviteStore.convites" /></div>
+      <BaseCard :items="conviteStore.convites" />
     </div>
   </q-page>
 </template>
@@ -45,8 +45,9 @@
 <script setup lang="ts">
 import { useConvitesStore } from '@/stores/convites'
 import BaseOptionGroup from '@/wrappers/BaseOptionGroup.vue'
-import ExpandableCarrousel from '@/wrappers/ExpandableCarrousel.vue'
+
 import { onMounted, ref } from 'vue'
+import BaseCard from '@/wrappers/BaseCard.vue'
 
 const conviteStore = useConvitesStore()
 

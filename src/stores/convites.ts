@@ -1,14 +1,6 @@
 import { defineStore } from 'pinia'
 import convitesData from '@/data/convites.json'
-
-export interface Convite {
-  id: number
-  slug: string
-  thumbnail: string
-  images: string[]
-  title: string
-  details: string[]
-}
+import type { Convite } from '@/models/convite.ts'
 
 export const useConvitesStore = defineStore('convites', {
   state: () => ({
