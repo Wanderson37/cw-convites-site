@@ -8,23 +8,30 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       {
         path: '',
+        name: 'home',
         component: () => import('@/views/HomeView.vue'),
       },
       {
-        path: '/convites',
+        path: 'convites',
+        name: 'convites',
         component: () => import('@/views/ConvitesView.vue'),
       },
+      {
+        path: 'convites/:id',
+        name: 'convite-details',
+        component: () => import('@/views/ConviteDetailsView.vue'),
+      },
+      {
+        path: 'carrinho',
+        name: 'carrinho',
+        component: () => import('@/views/CarrinhoView.vue'),
+      },
+      {
+        path: 'about',
+        name: 'about',
+        component: () => import('@/views/AboutView.vue'),
+      },
     ],
-  },
-  {
-    path: '/convites/:id',
-    component: () => import('@/views/ConviteDetailsView.vue'),
-  },
-  {
-    path: '/about',
-    name: 'about',
-
-    component: () => import('../views/AboutView.vue'),
   },
 ]
 

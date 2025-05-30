@@ -81,5 +81,6 @@ const drawerClick = () => {
 
 onMounted(async () => {
   await conviteStore.getConvites()
+  console.log('Convites loaded:', conviteStore.convites)
 })
 </script>

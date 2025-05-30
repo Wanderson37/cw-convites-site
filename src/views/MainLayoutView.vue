@@ -12,12 +12,13 @@
           indicator-color="primary"
         >
           <q-route-tab to="/" label="Home" />
-          <q-route-tab to="/convites" label="Convites" />
+          <q-route-tab to="/convites" label="Convites" :exact="false" />
           <q-route-tab to="" label="Caixas" />
           <q-route-tab to="" label="Papelaria" />
           <q-route-tab to="" label="Sobre Nós" />
         </q-tabs>
-        <BaseButton class="q-mr-lg" flat dense round>
+        <q-space />
+        <BaseButton class="q-mr-lg" flat dense round to="/carrinho">
           <q-icon name="shopping_cart" size="2rem" class="text-black" />
         </BaseButton>
       </q-toolbar>
