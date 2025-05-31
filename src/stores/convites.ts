@@ -17,5 +17,17 @@ export const useConvitesStore = defineStore('convites', {
       this._convites = convitesData as Convite[]
       this._isLoading = false
     },
+    async orderConvite(conviteId: number) {
+      this._isLoading = true
+      // Simula uma chamada de API para ordenar o convite
+      const convite = this._convites.find((c) => c.id === conviteId)
+      if (convite) {
+        // Aqui você poderia fazer uma chamada real para um backend
+        console.log(`Convite ${conviteId} ordenado!`)
+      } else {
+        console.error(`Convite ${conviteId} não encontrado!`)
+      }
+      this._isLoading = false
+    },
   },
 })

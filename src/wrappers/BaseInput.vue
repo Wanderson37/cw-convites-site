@@ -1,5 +1,5 @@
 <template>
-  <q-input ref="root" style="min-width: 15rem" v-bind="props" v-model.trim="value">
+  <q-input ref="root" style="min-width: 6rem" v-bind="props" v-model.trim="value">
     <template v-for="(_, slot) in slots" :key="slot" v-slot:[slot]="scope">
       <slot :name="slot" v-bind="scope" :key="slot" />
     </template>
@@ -30,7 +30,8 @@ import { computed, ref, useSlots } from 'vue'
 const emits = defineEmits(events)
 const props = withDefaults(defineProps<QInputProps>(), {
   bottomSlots: true,
-  bgColor: 'grey-4',
+  bgColor: 'grey-2',
+  hideBottomSpace: true,
   hideHint: true,
   lazyRules: true,
   outlined: true,

@@ -1,6 +1,10 @@
 [
   {
-    "details": ["Kit tags(3 senhas 5x3cm e 1 lista de presentes 6x4cm) e mini clip prata."],
+    "details": [
+      "Kit tags(3 senhas 5x3cm e 1 lista de presentes 6x4cm).",
+      "Mini clip prata.",
+      "Envelope plástico"
+    ],
     "envelopeModel": "Thainá",
     "envelopePaper": "Vegetal 180g",
     "finishing": "Sisal",
@@ -11,7 +15,7 @@
     "minimalOrder": 30,
     "occasion": "Casamento",
     "price": 15.0,
-    "size": "14x20",
+    "size": "14x20cm",
     "slug": "convite-amanda",
     "style": "Rústico",
     "thumbnail": "/convites/amanda/1.png",
