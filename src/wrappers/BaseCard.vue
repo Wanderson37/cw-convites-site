@@ -3,39 +3,37 @@
     <q-card v-for="item in items" :key="item.id" class="my-card card" bordered>
       <q-card-section class="q-pa-none">
         <template v-if="item.images?.length">
-          <router-link :to="`/convites/${item.id}`">
-            <q-carousel
-              animated
-              :autoplay="autoplay"
-              height="200px"
-              infinite
-              transition-prev="slide-right"
-              transition-next="slide-left"
-              swipeable
-              v-model="itemCarouselIndex[item.id]"
-              @mouseenter="autoplay = true"
-              @mouseleave="autoplay = false"
-            >
-              <q-carousel-slide v-for="(slide, i) in item.images" :key="i" :name="i">
-                <q-img
-                  :src="slide"
-                  style="height: 100%; width: 100%; object-fit: cover"
-                  :ratio="16 / 9"
-                >
-                  <template #loading>
-                    <div class="row items-center justify-center" style="height: 100%">
-                      <q-spinner color="primary" size="40px" />
-                    </div>
-                  </template>
-                  <template #error>
-                    <div class="row items-center justify-center" style="height: 100%">
-                      <q-icon name="error" size="40px" color="negative" />
-                    </div>
-                  </template>
-                </q-img>
-              </q-carousel-slide>
-            </q-carousel>
-          </router-link>
+          <q-carousel
+            animated
+            :autoplay="autoplay"
+            height="200px"
+            infinite
+            transition-prev="slide-right"
+            transition-next="slide-left"
+            swipeable
+            v-model="itemCarouselIndex[item.id]"
+            @mouseenter="autoplay = true"
+            @mouseleave="autoplay = false"
+          >
+            <q-carousel-slide v-for="(slide, i) in item.images" :key="i" :name="i">
+              <q-img
+                :src="slide"
+                style="height: 100%; width: 100%; object-fit: cover"
+                :ratio="16 / 9"
+              >
+                <template #loading>
+                  <div class="row items-center justify-center" style="height: 100%">
+                    <q-spinner color="primary" size="40px" />
+                  </div>
+                </template>
+                <template #error>
+                  <div class="row items-center justify-center" style="height: 100%">
+                    <q-icon name="error" size="40px" color="negative" />
+                  </div>
+                </template>
+              </q-img>
+            </q-carousel-slide>
+          </q-carousel>
         </template>
 
         <div v-else class="row items-center justify-center" style="height: 200px">
