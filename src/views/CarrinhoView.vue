@@ -94,17 +94,24 @@ const router = useRouter()
 
 const cartItems = computed(() => cart.items)
 
-// opções de parcelamento originais
-const paymentOptionsCartao = [
-  { label: 'À vista', value: 'avista' },
-  { label: '2x', value: '2' },
-  { label: '3x', value: '3' },
-  { label: '4x', value: '4' },
-  { label: '5x', value: '5' },
-  { label: '6x', value: '6' },
-]
+const totalNumber = computed(
+  () =>
+    cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0) *
+    (cart.paymentMethod === 'pix' ? 0.95 : 1),
+)
+const allInstallments = [1, 2, 3, 4, 5, 6]
 
-// valor total já formatado ex. "1500,00"
+const paymentOptionsCartao = computed(() =>
+  allInstallments.map((n) => {
+    const parcelaValor = totalNumber.value / n
+    const formatted = `R$ ${parcelaValor.toFixed(2).replace('.', ',')}`
+    return {
+      label: n === 1 ? `À vista (${formatted})` : `${n}x de ${formatted} sem juros`,
+      value: n.toString(),
+    }
+  }),
+)
+
 const displayTotal = computed(() => {
   let total = cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0)
   if (cart.paymentMethod === 'pix') {
@@ -113,21 +120,16 @@ const displayTotal = computed(() => {
   return total.toFixed(2).replace('.', ',')
 })
 
-// converte para número para cálculo
-const totalNumber = computed(() => Number(displayTotal.value.replace(/\./g, '').replace(',', '.')))
-
-// filtra parcelas em que cada parcela >= 150 e limita a 5 opções
 const paymentOptionsCartaoFiltered = computed(() =>
-  paymentOptionsCartao
+  paymentOptionsCartao.value
     .filter((opt) => {
-      const n = opt.value === 'avista' ? 1 : parseInt(opt.value, 10)
+      const n = parseInt(opt.value, 10)
       return totalNumber.value / n >= 150
     })
     .slice(0, 5),
 )
 
-// v-model local para escolha de parcelas
-const parcelas = ref(paymentOptionsCartaoFiltered.value[0]?.value || 'avista')
+const parcelas = ref(paymentOptionsCartaoFiltered.value[0]?.value || '1')
 
 function increase(row: { id: string | number; quantity: number }) {
   cart.updateQuantity(row.id, row.quantity + 1)
