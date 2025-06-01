@@ -12,66 +12,177 @@
         flat
         table-style="min-width: 600px"
       >
-        <template v-slot:body-cell-quantity="{ row }">
-          <q-btn dense flat round icon="remove" @click="decrease(row)" />
-          <span class="q-mx-sm">{{ row.quantity }}</span>
-          <q-btn dense flat round icon="add" @click="increase(row)" />
+        <template #body-cell-image="props">
+          <q-td class="text-center">
+            <q-img
+              :src="props.row.image"
+              style="width: 100px; height: 100px"
+              contain
+              class="rounded-borders"
+            /> </q-td
+        ></template>
+        <template #body-cell-quantity="props">
+          <q-td class="text-center">
+            <q-btn
+              dense
+              :disabled="props.row.minimalOrder >= props.row.quantity"
+              flat
+              round
+              icon="remove"
+              @click="decrease(props.row)"
+            />
+            <span class="q-mx-sm">{{ props.row.quantity }}</span>
+            <q-btn dense flat round icon="add" @click="increase(props.row)" />
+          </q-td>
         </template>
 
-        <template v-slot:body-cell-subtotal="{ row }">
-          R$ {{ (row.price * row.quantity).toFixed(2).replace('.', ',') }}
+        <template #body-cell-subtotal="props">
+          <q-td class="text-center">
+            R$ {{ (props.row.price * props.row.quantity).toFixed(2).replace('.', ',') }}</q-td
+          >
         </template>
 
-        <template v-slot:body-cell-remove="{ row }">
-          <q-btn dense flat color="negative" icon="delete" @click="remove(row)" />
+        <template #body-cell-remove="props">
+          <q-td>
+            <q-btn dense flat color="negative" icon="delete" @click="remove(props.row)"
+          /></q-td>
         </template>
       </q-table>
 
+      <q-card-section class="q-pt-lg">
+        <BaseInput
+          filled
+          label="Outras instruções / Observações"
+          type="textarea"
+          v-model="cart.otherNotes"
+          autogrow
+          placeholder="Ex: Preciso de envelopes extras, gravar nomes, etc."
+        />
+      </q-card-section>
+
+      <q-card-section>
+        <div class="text-subtitle2 q-mb-sm">Forma de pagamento</div>
+        <q-option-group
+          v-model="cart.paymentMethod"
+          :options="paymentOptions"
+          type="radio"
+          inline
+        />
+      </q-card-section>
+
+      <q-card-section v-if="cart.paymentMethod === 'cartao'">
+        <div class="text-subtitle2 q-mb-sm">Parcelas</div>
+        <q-option-group v-model="parcelas" :options="paymentOptionsCartaoFiltered" type="radio" />
+      </q-card-section>
+
       <q-card-section align="right" class="q-pt-lg">
-        <div class="text-h5 q-mb-sm">Total: R$ {{ total.toFixed(2).replace('.', ',') }}</div>
-        <q-btn label="Finalizar Compra" color="primary" />
+        <div class="text-h5 q-mb-sm">Total: R$ {{ displayTotal }}</div>
+        <q-btn label="Finalizar Compra" color="primary" @click="onFinalizeOrder" />
       </q-card-section>
     </q-card>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useCartStore } from '@/stores/cart'
-import { QPage, QCard, QCardSection, QTable, QBtn } from 'quasar'
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useCartStore } from '@/stores/cart.ts'
+import BaseInput from '@/wrappers/BaseInput.vue'
 
-const cartStore = useCartStore()
-const cartItems = computed(() => cartStore.items)
-const total = computed(() =>
-  cartItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0),
+const cart = useCartStore()
+const router = useRouter()
+
+const cartItems = computed(() => cart.items)
+
+// opções de parcelamento originais
+const paymentOptionsCartao = [
+  { label: 'À vista', value: 'avista' },
+  { label: '2x', value: '2' },
+  { label: '3x', value: '3' },
+  { label: '4x', value: '4' },
+  { label: '5x', value: '5' },
+  { label: '6x', value: '6' },
+]
+
+// valor total já formatado ex. "1500,00"
+const displayTotal = computed(() => {
+  let total = cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  if (cart.paymentMethod === 'pix') {
+    total *= 0.95
+  }
+  return total.toFixed(2).replace('.', ',')
+})
+
+// converte para número para cálculo
+const totalNumber = computed(() => Number(displayTotal.value.replace(/\./g, '').replace(',', '.')))
+
+// filtra parcelas em que cada parcela >= 150 e limita a 5 opções
+const paymentOptionsCartaoFiltered = computed(() =>
+  paymentOptionsCartao
+    .filter((opt) => {
+      const n = opt.value === 'avista' ? 1 : parseInt(opt.value, 10)
+      return totalNumber.value / n >= 150
+    })
+    .slice(0, 5),
 )
 
-function increase(row: { id: number; quantity: number }) {
-  cartStore.updateQuantity(row.id, row.quantity + 1)
+// v-model local para escolha de parcelas
+const parcelas = ref(paymentOptionsCartaoFiltered.value[0]?.value || 'avista')
+
+function increase(row: { id: string | number; quantity: number }) {
+  cart.updateQuantity(row.id, row.quantity + 1)
 }
-function decrease(row: { id: number; quantity: number }) {
+function decrease(row: { id: string | number; quantity: number }) {
   if (row.quantity > 1) {
-    cartStore.updateQuantity(row.id, row.quantity - 1)
+    cart.updateQuantity(row.id, row.quantity - 1)
   }
 }
-function remove(row: { id: number }) {
-  cartStore.remove(row.id)
+
+function remove(row: { id: string | number }) {
+  cart.removeFromCart(row.id)
 }
 
+const paymentOptions = [
+  { label: 'Pix', value: 'pix' },
+  { label: 'Cartão de Crédito', value: 'cartao' },
+]
 const columns = [
-  { name: 'product', label: 'Produto', field: 'title' },
+  {
+    name: 'image',
+    label: 'Imagem',
+    field: 'image',
+    align: 'center' as const,
+    style: 'width: 100px',
+  },
+  { name: 'cod', label: 'Cod', field: 'cod', align: 'left' as const },
+  { name: 'product', label: 'Produto', field: 'title', align: 'left' as const },
   {
     name: 'price',
     label: 'Preço',
     field: 'price',
+    align: 'left' as const,
     format: (val: number) => `R$ ${val.toFixed(2).replace('.', ',')}`,
   },
-  { name: 'quantity', label: 'Qtd', field: 'quantity' },
-  { name: 'subtotal', label: 'Subtotal', field: (row: any) => row.price * row.quantity },
-  { name: 'remove', label: '', field: 'remove' },
+  { name: 'quantity', label: 'Qtd', field: 'quantity', align: 'center' as const },
+  {
+    name: 'subtotal',
+    label: 'Subtotal',
+    field: (row: { price: number; quantity: number }) => row.price * row.quantity,
+    align: 'center' as const,
+  },
+  { name: 'remove', label: '', field: 'remove', align: 'center' as const },
 ]
-</script>
 
-<style scoped>
-/* ajuste responsivo, espaçamentos, etc. */
-</style>
+function onFinalizeOrder() {
+  if (!cart.paymentMethod) {
+    return
+  }
+
+  const encoded = cart.generatePayload()
+
+  router.push({
+    name: 'PedidoView',
+    query: { payload: encoded },
+  })
+}
+</script>

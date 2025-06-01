@@ -1,4 +1,5 @@
 export interface Convite {
+  cod: string
   details: string[]
   envelopeModel: string
   envelopePaper: string

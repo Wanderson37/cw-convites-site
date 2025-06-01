@@ -23,13 +23,18 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'carrinho',
-        name: 'carrinho',
+        name: 'CarrinhoView',
         component: () => import('@/views/CarrinhoView.vue'),
       },
       {
         path: 'about',
         name: 'about',
         component: () => import('@/views/AboutView.vue'),
+      },
+      {
+        path: '/pedido',
+        name: 'PedidoView',
+        component: () => import('@/views/PedidoView.vue'),
       },
     ],
   },
