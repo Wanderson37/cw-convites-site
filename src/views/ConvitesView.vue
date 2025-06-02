@@ -37,7 +37,7 @@
         <BaseOptionGroup v-model="filterOptions" :options="convitesOptionsTypes" color="primary" />
       </q-drawer>
       <q-separator vertical class="q-mx-lg" />
-      <BaseCard :items="conviteStore.convites" />
+      <BaseCard :items="conviteStore.convites" @add-to-cart="onConviteOrder" />
     </div>
   </q-page>
 </template>
@@ -45,11 +45,17 @@
 <script setup lang="ts">
 import { useConvitesStore } from '@/stores/convites'
 import BaseOptionGroup from '@/wrappers/BaseOptionGroup.vue'
-
+import { useCartStore } from '@/stores/cart'
+import { useRouter } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import BaseCard from '@/wrappers/BaseCard.vue'
+import type { Convite } from '@/models/convite'
+import { useQuasar } from 'quasar'
 
+const $q = useQuasar()
 const conviteStore = useConvitesStore()
+const cartStore = useCartStore()
+const router = useRouter()
 
 const convitesOptionsSize = [
   { label: '14x20cm', value: '14x20' },
@@ -82,4 +88,38 @@ const drawerClick = () => {
 onMounted(async () => {
   await conviteStore.getConvites()
 })
+
+function onConviteOrder(item: Convite) {
+  if (!item) return
+
+  cartStore.addToCart({
+    id: item.id,
+    cod: item.cod,
+    title: item.title,
+    price: item.price,
+    image: item.images[0],
+    minimalOrder: item.minimalOrder,
+  })
+
+  cartStore.updateQuantity(item.id, item.minimalOrder)
+
+  $q.dialog({
+    title: 'Convite adicionado ao carrinho',
+    message: `Você quer ir para o carrinho?`,
+    ok: {
+      label: 'Sim',
+      color: 'primary',
+      flat: true,
+      push: true,
+    },
+    cancel: {
+      label: 'Continuar comprando',
+      color: 'primary',
+    },
+  })
+    .onOk(() => {
+      router.push({ name: 'CarrinhoView' })
+    })
+    .onCancel(() => {})
+}
 </script>

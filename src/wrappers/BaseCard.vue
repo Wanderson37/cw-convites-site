@@ -45,17 +45,18 @@
         <router-link :to="`/convites/${item.id}`" class="text-h6 card-title">
           {{ item.title }}
         </router-link>
+        <div class="row justify-between text-subtitle2 q-mb-sm">
+          <p>Cod: {{ item.cod }}</p>
+          <p>Preço: R$ {{ item.price.toFixed(2).replace('.', ',') }}</p>
+        </div>
         <q-btn
           fab
           color="primary"
           icon="add_shopping_cart"
           class="absolute"
           style="top: 0; right: 12px; transform: translateY(-50%)"
+          @click="$emit('add-to-cart', item)"
         />
-
-        <div class="text-subtitle2 q-mt-sm">
-          Preço: R$ {{ item.price.toFixed(2).replace('.', ',') }}
-        </div>
       </q-card-section>
     </q-card>
   </div>
@@ -64,6 +65,10 @@
 <script setup lang="ts">
 import { reactive, watch, ref } from 'vue'
 import type { Convite } from '@/models/convite'
+
+defineEmits<{
+  (emit: 'add-to-cart', item: Convite): void
+}>()
 
 const props = defineProps<{ items: Convite[] }>()
 

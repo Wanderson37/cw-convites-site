@@ -86,7 +86,9 @@ import { useConvitesStore } from '@/stores/convites'
 import { useCartStore } from '@/stores/cart.ts'
 import BaseButton from '@/wrappers/BaseButton.vue'
 import BaseInput from '@/wrappers/BaseInput.vue'
+import { useQuasar } from 'quasar'
 
+const $q = useQuasar()
 const route = useRoute()
 const router = useRouter()
 
@@ -135,9 +137,25 @@ function onConviteOrder() {
     image: item.images[0],
     minimalOrder: item.minimalOrder,
   })
-  console.log(item)
-  cartStore.updateQuantity(item.id, conviteOrder.value)
 
-  router.push({ name: 'CarrinhoView' })
+  cartStore.updateQuantity(item.id, conviteOrder.value)
+  $q.dialog({
+    title: 'Convite adicionado ao carrinho',
+    message: `Você quer ir para o carrinho?`,
+    ok: {
+      label: 'Sim',
+      color: 'primary',
+      flat: true,
+      push: true,
+    },
+    cancel: {
+      label: 'Continuar comprando',
+      color: 'primary',
+    },
+  })
+    .onOk(() => {
+      router.push({ name: 'CarrinhoView' })
+    })
+    .onCancel(() => {})
 }
 </script>

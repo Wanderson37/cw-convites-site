@@ -19,7 +19,16 @@
         </q-tabs>
         <q-space />
         <BaseButton class="q-mr-lg" flat dense round to="/carrinho">
-          <q-icon name="shopping_cart" size="2rem" class="text-black" />
+          <q-icon name="shopping_cart" size="2rem" class="text-primary" />
+          <q-badge
+            v-if="cartStore.items.length > 0"
+            rounded
+            floating
+            align="top"
+            class="bg-negative text-white"
+            style="font-size: 0.8rem"
+            :label="cartStore.items.length"
+          />
         </BaseButton>
       </q-toolbar>
     </div>
@@ -43,5 +52,8 @@
 </template>
 
 <script setup lang="ts">
+import { useCartStore } from '@/stores/cart'
 import BaseButton from '@/wrappers/BaseButton.vue'
+
+const cartStore = useCartStore()
 </script>
