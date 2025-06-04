@@ -76,6 +76,9 @@
       </q-card-section>
 
       <q-card-section align="right" class="q-pt-lg">
+        <div v-if="cart.paymentMethod === 'pix'" class="text-subtitle2 q-mb-sm">
+          5% de desconto no PIX
+        </div>
         <div class="text-h5 q-mb-sm">Total: R$ {{ displayTotal }}</div>
         <q-btn label="Finalizar Compra" color="primary" @click="onFinalizeOrder" />
       </q-card-section>
@@ -88,7 +91,9 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '@/stores/cart.ts'
 import BaseInput from '@/wrappers/BaseInput.vue'
+import emailjs from 'emailjs-com'
 
+emailjs.init('7j7_HNctbNiHuJi39')
 const cart = useCartStore()
 const router = useRouter()
 
@@ -175,16 +180,51 @@ const columns = [
   { name: 'remove', label: '', field: 'remove', align: 'center' as const },
 ]
 
-function onFinalizeOrder() {
+async function onFinalizeOrder() {
   if (!cart.paymentMethod) {
     return
   }
 
-  const encoded = cart.generatePayload()
+  const payload = {
+    items: cart.items,
+    otherNotes: cart.otherNotes,
+    paymentMethod: cart.paymentMethod,
+    total: Number(
+      cart.items.reduce((sum, i) => sum + i.price * i.quantity, 0) *
+        (cart.paymentMethod === 'pix' ? 0.95 : 1),
+    ),
+    parcelamento: Number(parcelas.value),
+  }
 
-  router.push({
-    name: 'PedidoView',
-    query: { payload: encoded },
-  })
+  const templateParams = {
+    vendor_email: 'vendascwconvites@gmail.com',
+
+    items: JSON.stringify(payload.items),
+    total: payload.total,
+    otherNotes: payload.otherNotes,
+    paymentMethod: payload.paymentMethod,
+    parcelamento: payload.parcelamento,
+  }
+
+  try {
+    const result = await emailjs.send(
+      'service_uu16g3b',
+      'template_3dvb2zn',
+      templateParams,
+      '7j7_HNctbNiHuJi39',
+    )
+
+    console.log('E-mail enviado:', result.status, result.text)
+
+    const encoded = encodeURIComponent(btoa(JSON.stringify(payload)))
+    router.push({
+      name: 'PedidoView',
+      query: { payload: encoded },
+    })
+  } catch (error) {
+    console.error('Falha ao enviar e-mail:', error)
+
+    alert('Erro ao enviar e-mail. Tente novamente mais tarde.')
+  }
 }
 </script>

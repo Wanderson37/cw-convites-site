@@ -15,6 +15,7 @@
           <q-route-tab to="/convites" label="Convites" :exact="false" />
           <q-route-tab to="" label="Caixas" />
           <q-route-tab to="" label="Papelaria" />
+          <q-route-tab to="" label="Dicas" />
           <q-route-tab to="" label="Sobre Nós" />
         </q-tabs>
         <q-space />
