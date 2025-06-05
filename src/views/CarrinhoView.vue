@@ -138,6 +138,7 @@ const itemsForEmail = computed(() => {
     const priceUnit = item.price.toFixed(2).replace('.', ',')
     const priceTotal = (item.price * item.quantity).toFixed(2).replace('.', ',')
     return {
+      cod: item.cod,
       product: item.title,
       units: item.quantity,
       priceUnit,
@@ -198,6 +199,7 @@ async function onEnviarEmailEFinalizar() {
     total: totalFormatted.value,
     otherNotes: otherNotes.value,
     paymentMethod: paymentMethod.value,
+    parcelas: parcelas.value,
     urlSite: urlSite.value,
     vendor_email: 'vendascwconvites@gmail.com',
   }
@@ -211,7 +213,7 @@ async function onEnviarEmailEFinalizar() {
       otherNotes: cart.otherNotes,
       paymentMethod: cart.paymentMethod,
       total: Number(cart.items.reduce((s, i) => s + i.price * i.quantity, 0)),
-      parcelamento: Number(/*se você usar parcelas, passe aqui*/),
+      parcelamento: Number(parcelas.value),
     }
     const encoded = encodeURIComponent(btoa(JSON.stringify(payload)))
     router.push({ name: 'PedidoView', query: { payload: encoded } })
