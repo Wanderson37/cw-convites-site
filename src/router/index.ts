@@ -15,12 +15,15 @@ const routes: Array<RouteRecordRaw> = [
         path: 'convites',
         name: 'convites',
         component: () => import('@/views/ConvitesView.vue'),
+        children: [
+          {
+            path: ':id',
+            name: 'convite-details',
+            component: () => import('@/views/ConviteDetailsView.vue'),
+          },
+        ],
       },
-      {
-        path: 'convites/:id',
-        name: 'convite-details',
-        component: () => import('@/views/ConviteDetailsView.vue'),
-      },
+
       {
         path: 'carrinho',
         name: 'CarrinhoView',

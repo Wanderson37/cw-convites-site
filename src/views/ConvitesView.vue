@@ -1,61 +1,72 @@
 <template>
-  <q-page>
-    <div class="full-width q-pa-lg row">
-      <q-drawer
-        v-model="drawer"
-        class="q-pa-lg"
-        show-if-above
-        :mini="!drawer || miniState"
-        @click.capture="drawerClick"
-        :width="200"
-        :breakpoint="500"
-        bordered
-        :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'"
-      >
-        <h3>Filtros</h3>
-        <b>Tamanhos</b>
-        <BaseOptionGroup v-model="filterOptions" :options="convitesOptionsSize" color="primary" />
-        <b>Papel Convite</b>
-        <BaseOptionGroup
-          v-model="filterOptions"
-          :options="convitesOptionsPaperInvite"
-          color="primary"
-        />
-        <b>Papel Envelope</b>
-        <BaseOptionGroup
-          v-model="filterOptions"
-          :options="convitesOptionsPaperEnvelope"
-          color="primary"
-        />
-        <b>Acabamentos</b>
-        <BaseOptionGroup
-          v-model="filterOptions"
-          :options="convitesOptionsFinishing"
-          color="primary"
-        />
-        <b>Tipo de Convite</b>
-        <BaseOptionGroup v-model="filterOptions" :options="convitesOptionsTypes" color="primary" />
-      </q-drawer>
-      <q-separator vertical class="q-mx-lg" />
-      <BaseCard :items="conviteStore.convites" @add-to-cart="onConviteOrder" />
-    </div>
-  </q-page>
+  <template v-if="!isDetail">
+    <q-page>
+      <div class="full-width q-pa-lg row">
+        <q-drawer
+          v-model="drawer"
+          class="q-pa-lg"
+          show-if-above
+          :mini="!drawer || miniState"
+          @click.capture="drawerClick"
+          :width="200"
+          :breakpoint="500"
+          bordered
+          :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'"
+        >
+          <h3>Filtros</h3>
+          <b>Tamanhos</b>
+          <BaseOptionGroup v-model="filterOptions" :options="convitesOptionsSize" color="primary" />
+          <b>Papel Convite</b>
+          <BaseOptionGroup
+            v-model="filterOptions"
+            :options="convitesOptionsPaperInvite"
+            color="primary"
+          />
+          <b>Papel Envelope</b>
+          <BaseOptionGroup
+            v-model="filterOptions"
+            :options="convitesOptionsPaperEnvelope"
+            color="primary"
+          />
+          <b>Acabamentos</b>
+          <BaseOptionGroup
+            v-model="filterOptions"
+            :options="convitesOptionsFinishing"
+            color="primary"
+          />
+          <b>Tipo de Convite</b>
+          <BaseOptionGroup
+            v-model="filterOptions"
+            :options="convitesOptionsTypes"
+            color="primary"
+          />
+        </q-drawer>
+        <q-separator vertical class="q-mx-lg" />
+        <!-- seus cards -->
+        <BaseCard :items="conviteStore.convites" @add-to-cart="onConviteOrder" />
+      </div>
+    </q-page>
+  </template>
+
+  <template v-if="isDetail">
+    <router-view />
+  </template>
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useConvitesStore } from '@/stores/convites'
 import BaseOptionGroup from '@/wrappers/BaseOptionGroup.vue'
-import { useCartStore } from '@/stores/cart'
-import { useRouter } from 'vue-router'
-import { onMounted, ref } from 'vue'
 import BaseCard from '@/wrappers/BaseCard.vue'
-import type { Convite } from '@/models/convite'
+import { useCartStore } from '@/stores/cart'
 import { useQuasar } from 'quasar'
 
 const $q = useQuasar()
 const conviteStore = useConvitesStore()
 const cartStore = useCartStore()
 const router = useRouter()
+const route = useRoute()
 
 const convitesOptionsSize = [
   { label: '14x20cm', value: '14x20' },
@@ -89,7 +100,18 @@ onMounted(async () => {
   await conviteStore.getConvites()
 })
 
-function onConviteOrder(item: Convite) {
+const isDetail = computed(() => route.name === 'convite-details')
+
+interface ConviteOrder {
+  id: number | string
+  cod: string
+  title: string
+  price: number
+  images: string[]
+  minimalOrder: number
+}
+
+function onConviteOrder(item: ConviteOrder) {
   if (!item) return
 
   cartStore.addToCart({
