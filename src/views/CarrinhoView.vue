@@ -60,14 +60,45 @@
         />
       </q-card-section>
       <q-card-section>
-        <div class="text-subtitle2 q-mb-sm">Informações</div>
-        <div class="row items-center q-gutter-md">
-          <BaseInput v-model="client" dense filled label="Seu nome" />
-          <BaseInput v-model="cpf" dense filled label="CPF" />
-          <BaseInput v-model="contact" dense filled label="Contato " />
-          <BaseInputDate v-model="eventDate" filled label="Data do evento" />
-          <BaseInput v-model="cerimonial" dense filled label="Nome do cerimonial" />
-        </div>
+        <q-form ref="pedidoForm">
+          <div class="text-subtitle2 q-mb-sm">Informações</div>
+          <div class="row items-center q-gutter-md">
+            <BaseInput
+              v-model="form.client"
+              dense
+              filled
+              label="Seu nome"
+              required
+              :rules="[(v) => !!v || 'Nome é obrigatório']"
+            />
+            <BaseInput
+              v-model="form.cpf"
+              dense
+              label="CPF"
+              mask="###.###.###-##"
+              :rules="form.cpf ? [cpfRule] : []"
+            />
+            <BaseInputDate
+              v-model="form.eventDate"
+              label="Data do evento"
+              lazy-rules
+              mask="##/##/####"
+              :rules="[(v) => !!v || 'Data é obrigatória', dateRule]"
+              required
+            />
+            <BaseInput
+              v-model="form.contact"
+              dense
+              label="Celular"
+              lazy-rules
+              mask="(##) #####-####"
+              :rules="[(v) => !!v || 'Celular é obrigatório', phoneRule]"
+              required
+            />
+            <BaseInput v-model="form.clientMail" dense label="E-mail" :rules="[emailRule]" />
+            <BaseInput v-model="form.cerimonial" dense filled label="Nome do cerimonial" />
+          </div>
+        </q-form>
       </q-card-section>
 
       <q-card-section>
@@ -103,17 +134,23 @@ import { useCartStore } from '@/stores/cart.ts'
 import BaseInput from '@/wrappers/BaseInput.vue'
 import emailjs from 'emailjs-com'
 import BaseInputDate from '@/wrappers/BaseInputDate.vue'
+import { cpfRule, phoneRule, dateRule, emailRule } from '@/utils/validators'
+import { QForm } from 'quasar'
 
 emailjs.init('7j7_HNctbNiHuJi39')
 
 const cart = useCartStore()
 const router = useRouter()
 
-const cerimonial = ref('')
-const client = ref('')
-const cpf = ref('')
-const contact = ref('')
-const eventDate = ref('')
+const form = ref({
+  client: '',
+  cpf: '',
+  contact: '',
+  eventDate: '',
+  cerimonial: '',
+  clientMail: '',
+})
+const pedidoForm = ref<InstanceType<typeof QForm> | null>(null)
 const urlSite = ref(window.location.href)
 
 const allInstallments = [1, 2, 3, 4, 5, 6]
@@ -186,15 +223,21 @@ function decrease(row: { id: string | number; quantity: number }) {
   }
 }
 async function onEnviarEmailEFinalizar() {
-  if (!cart.paymentMethod) return
+  const valid = await pedidoForm.value?.validate()
+  if (!valid) {
+    console.error('Formulário inválido')
+    return
+  }
 
   const templateParams = {
     currentDate: currentDate.value,
-    cerimonial: cerimonial.value,
-    client: client.value,
-    cpf: cpf.value,
-    contact: contact.value,
-    eventDate: eventDate.value,
+    cerimonial: form.value.cerimonial,
+    client: form.value.client,
+    cpf: form.value.cpf,
+    clientMail: form.value.clientMail,
+    contact: form.value.contact,
+    contactF: form.value.contact.replace(/\D/g, ''),
+    eventDate: form.value.eventDate,
     items: itemsForEmail.value,
     total: totalFormatted.value,
     otherNotes: otherNotes.value,

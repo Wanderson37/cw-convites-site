@@ -13,10 +13,10 @@
         >
           <q-route-tab to="/" label="Home" />
           <q-route-tab to="/convites" label="Convites" :exact="false" />
-          <q-route-tab to="" label="Caixas" />
-          <q-route-tab to="" label="Papelaria" />
-          <q-route-tab to="" label="Dicas" />
-          <q-route-tab to="" label="Sobre Nós" />
+          <q-route-tab to="/em-construcao" label="Caixas" />
+          <q-route-tab to="/em-construcao" label="Papelaria" />
+          <q-route-tab to="/em-construcao" label="Dicas" />
+          <q-route-tab to="/em-construcao" label="Sobre Nós" />
         </q-tabs>
         <q-space />
         <BaseButton class="q-mr-lg" flat dense round to="/carrinho">

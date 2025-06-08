@@ -39,6 +39,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'PedidoView',
         component: () => import('@/views/PedidoView.vue'),
       },
+      {
+        path: '/em-construcao',
+        name: 'ConstrucaoView',
+        component: () => import('@/views/ConstrucaoView.vue'),
+      },
     ],
   },
 ]

@@ -6,7 +6,7 @@
           <q-date
             v-model="value"
             color="primary"
-            mask="YYYY-MM-DD"
+            mask="DD-MM-YYYY"
             :options="dateOptions"
             todayBtn
           />
