@@ -23,7 +23,6 @@
 
       <q-separator vertical class="q-mx-lg" />
 
-      <!-- Use aqui os itens já filtrados -->
       <BaseCard :items="convitesFiltrados" @add-to-cart="onConviteOrder" />
     </div>
   </q-page>
@@ -47,11 +46,9 @@ const cartStore = useCartStore()
 const router = useRouter()
 const route = useRoute()
 
-// Drawer sempre aberto
 const drawer = ref(true)
 const isDetail = computed(() => route.name === 'convite-details')
 
-// Mapeamento título → campo do objeto Convite
 const filterFieldMap: Record<string, keyof Convite> = {
   Tamanho: 'size',
   Tipo: 'type',
@@ -76,18 +73,16 @@ const filters = [
   },
 ]
 
-// guardamos um array de seleções para cada filtro
 const filterOptions = reactive(
   filters.reduce(
     (acc, { title }) => {
-      acc[title] = [] // inicia cada filtro como array vazio
+      acc[title] = []
       return acc
     },
     {} as Record<string, string[]>,
   ),
 )
 
-// Computed que aplica todos os filtros em AND
 const convitesFiltrados = computed(() =>
   conviteStore.convites.filter((convite) =>
     filters.every(({ title }) => {
@@ -97,7 +92,6 @@ const convitesFiltrados = computed(() =>
       const field = filterFieldMap[title]
       const fieldValue = convite[field]?.toString().toLowerCase() || ''
 
-      // basta alguma seleção bater com o valor do convite
       return selected.some((val) => fieldValue.includes(val.toString().toLowerCase()))
     }),
   ),
