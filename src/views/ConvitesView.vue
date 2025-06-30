@@ -1,6 +1,15 @@
 <template>
   <q-page v-if="!isDetail">
     <div class="full-width q-pa-lg row">
+      <BaseButton
+        v-if="$q.screen.lt.sm"
+        color="primary"
+        flat
+        dense
+        label="Filtros"
+        icon="filter_list"
+        @click="drawer = !drawer"
+      />
       <q-drawer
         v-model="drawer"
         class="q-pa-lg"
@@ -21,8 +30,6 @@
         </div>
       </q-drawer>
 
-      <q-separator vertical class="q-mx-lg" />
-
       <BaseCard :items="convitesFiltrados" @add-to-cart="onConviteOrder" />
     </div>
   </q-page>
@@ -39,6 +46,7 @@ import { useCartStore } from '@/stores/cart'
 import BaseOptionGroup from '@/wrappers/BaseOptionGroup.vue'
 import BaseCard from '@/wrappers/BaseCard.vue'
 import type { Convite } from '@/models/convite'
+import BaseButton from '@/wrappers/BaseButton.vue'
 
 const $q = useQuasar()
 const conviteStore = useConvitesStore()
@@ -46,7 +54,7 @@ const cartStore = useCartStore()
 const router = useRouter()
 const route = useRoute()
 
-const drawer = ref(true)
+const drawer = ref(false)
 const isDetail = computed(() => route.name === 'convite-details')
 
 const filterFieldMap: Record<string, keyof Convite> = {

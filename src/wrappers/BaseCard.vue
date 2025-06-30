@@ -3,37 +3,23 @@
     <q-card v-for="item in items" :key="item.id" class="my-card card" bordered>
       <q-card-section class="q-pa-none">
         <template v-if="item.images?.length">
-          <q-carousel
-            animated
-            :autoplay="autoplay"
-            height="200px"
-            infinite
-            transition-prev="slide-right"
-            transition-next="slide-left"
-            swipeable
-            v-model="itemCarouselIndex[item.id]"
-            @mouseenter="autoplay = true"
-            @mouseleave="autoplay = false"
-          >
-            <q-carousel-slide v-for="(slide, i) in item.images" :key="i" :name="i">
-              <q-img
-                :src="slide"
-                style="height: 100%; width: 100%; object-fit: cover"
-                :ratio="16 / 9"
-              >
-                <template #loading>
-                  <div class="row items-center justify-center" style="height: 100%">
-                    <q-spinner color="primary" size="40px" />
-                  </div>
-                </template>
-                <template #error>
-                  <div class="row items-center justify-center" style="height: 100%">
-                    <q-icon name="error" size="40px" color="negative" />
-                  </div>
-                </template>
-              </q-img>
-            </q-carousel-slide>
-          </q-carousel>
+          <router-link :to="`/convites/${item.id}`">
+            <q-img
+              :src="item.images[0]"
+              style="height: 100%; width: 100%; object-fit: cover"
+              :ratio="16 / 9"
+            >
+              <template #loading>
+                <div class="row items-center justify-center" style="height: 100%">
+                  <q-spinner color="primary" size="40px" />
+                </div>
+              </template>
+              <template #error>
+                <div class="row items-center justify-center" style="height: 100%">
+                  <q-icon name="error" size="40px" color="negative" />
+                </div>
+              </template> </q-img
+          ></router-link>
         </template>
 
         <div v-else class="row items-center justify-center" style="height: 200px">
@@ -45,7 +31,7 @@
         <router-link :to="`/convites/${item.id}`" class="text-h6 card-title">
           {{ item.title }}
         </router-link>
-        <div class="row justify-between text-subtitle2 q-mb-sm">
+        <div class="row justify-between text-subtitle2">
           <p>Cod: {{ item.cod }}</p>
           <p>Preço: R$ {{ item.price.toFixed(2).replace('.', ',') }}</p>
         </div>
@@ -63,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch, ref } from 'vue'
+import { reactive, watch } from 'vue'
 import type { Convite } from '@/models/convite'
 
 defineEmits<{
@@ -72,7 +58,6 @@ defineEmits<{
 
 const props = defineProps<{ items: Convite[] }>()
 
-const autoplay = ref(true)
 const itemCarouselIndex = reactive<Record<string | number, number>>({})
 
 watch(
@@ -102,7 +87,7 @@ watch(
 
 .card
   cursor: pointer
-  min-width: 15rem
+  min-width: 12rem
   transition: all 0.3s
 
 .card:hover

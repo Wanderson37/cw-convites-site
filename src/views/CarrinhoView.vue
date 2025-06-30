@@ -5,13 +5,7 @@
         <div class="text-h6">Carrinho de Compras</div>
       </q-card-section>
 
-      <q-table
-        :rows="cartItems"
-        :columns="columns"
-        row-key="id"
-        flat
-        table-style="min-width: 600px"
-      >
+      <q-table :rows="cartItems" :columns="columnsResponsive" row-key="id" flat>
         <template #body-cell-image="props">
           <q-td class="text-center">
             <q-img
@@ -135,10 +129,11 @@ import BaseInput from '@/wrappers/BaseInput.vue'
 import emailjs from 'emailjs-com'
 import BaseInputDate from '@/wrappers/BaseInputDate.vue'
 import { cpfRule, phoneRule, dateRule, emailRule } from '@/utils/validators'
-import { QForm } from 'quasar'
+import { QForm, useQuasar } from 'quasar'
 
 emailjs.init('7j7_HNctbNiHuJi39')
 
+const $q = useQuasar()
 const cart = useCartStore()
 const router = useRouter()
 
@@ -299,4 +294,9 @@ const columns = [
   },
   { name: 'remove', label: '', field: 'remove', align: 'center' as const },
 ]
+const columnsResponsive = computed(() => {
+  return $q.screen.lt.sm
+    ? columns.filter((col) => col.name !== 'image' && col.name !== 'cod' && col.name !== 'price')
+    : columns
+})
 </script>
