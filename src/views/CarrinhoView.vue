@@ -8,13 +8,23 @@
       <q-table :rows="cartItems" :columns="columnsResponsive" row-key="id" flat>
         <template #body-cell-image="props">
           <q-td class="text-center">
-            <q-img
-              :src="props.row.image"
-              style="width: 100px; height: 100px"
-              contain
-              class="rounded-borders"
-            /> </q-td
-        ></template>
+            <RouterLink :to="`/convites/${props.row.id}`">
+              <q-img
+                :src="props.row.image"
+                style="width: 100px; height: 100px"
+                contain
+                class="rounded-borders"
+              />
+            </RouterLink>
+          </q-td>
+        </template>
+        <template #body-cell-product="props">
+          <q-td>
+            <RouterLink :to="`/convites/${props.row.id}`">
+              {{ props.row.title }}
+            </RouterLink>
+          </q-td>
+        </template>
         <template #body-cell-quantity="props">
           <q-td class="text-center">
             <q-btn
@@ -60,7 +70,6 @@
             <BaseInput
               v-model="form.client"
               dense
-              filled
               label="Seu nome"
               required
               :rules="[(v) => !!v || 'Nome é obrigatório']"
@@ -90,7 +99,7 @@
               required
             />
             <BaseInput v-model="form.clientMail" dense label="E-mail" :rules="[emailRule]" />
-            <BaseInput v-model="form.cerimonial" dense filled label="Nome do cerimonial" />
+            <BaseInput v-model="form.cerimonial" dense label="Nome do cerimonial" />
           </div>
         </q-form>
       </q-card-section>
