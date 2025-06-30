@@ -1,5 +1,5 @@
 <template>
-  <div class="row wrap q-gutter-md">
+  <div class="row items-center justify-center q-gutter-md wrap">
     <q-card v-for="item in items" :key="item.id" class="my-card card" bordered>
       <q-card-section class="q-pa-none">
         <template v-if="item.images?.length">
@@ -90,7 +90,7 @@ watch(
 
 <style scoped lang="sass">
 .my-card
-  width: 18rem
+  width: 12rem
   cursor: pointer
 
 .card-title
