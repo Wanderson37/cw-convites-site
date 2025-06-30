@@ -31,9 +31,11 @@
         <router-link :to="`/convites/${item.id}`" class="text-h6 card-title">
           {{ item.title }}
         </router-link>
-        <div class="row justify-between text-subtitle2">
-          <p>Cod: {{ item.cod }}</p>
-          <p>Preço: R$ {{ item.price.toFixed(2).replace('.', ',') }}</p>
+        <div>
+          <p class="text-subtitle2 q-ma-none">Cod: {{ item.cod }}</p>
+          <p class="text-subtitle2 q-ma-none">
+            Preço: R$ {{ item.price.toFixed(2).replace('.', ',') }}
+          </p>
         </div>
         <q-btn
           fab
