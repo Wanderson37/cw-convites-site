@@ -3,8 +3,21 @@
     <div v-if="convite" class="row items-center justify-center q-gutter-md q-mb-lg">
       <div style="width: 30rem">
         <q-carousel v-model="slide" arrows height="30rem" thumbnails swipeable animated>
-          <q-carousel-slide v-for="(img, i) in convite.images" :key="i" :name="i" :img-src="img" />
+          <q-carousel-slide
+            v-for="(img, i) in convite.images"
+            :key="i"
+            :name="i"
+            :img-src="img"
+            class="cursor-pointer"
+            @click="openLightbox(i)"
+          />
         </q-carousel>
+        <vue-easy-lightbox
+          :visible="lightboxVisible"
+          :imgs="convite.images"
+          :index="lightboxIndex"
+          @hide="lightboxVisible = false"
+        />
       </div>
 
       <q-card>
@@ -87,6 +100,7 @@ import { useCartStore } from '@/stores/cart.ts'
 import BaseButton from '@/wrappers/BaseButton.vue'
 import BaseInput from '@/wrappers/BaseInput.vue'
 import { useQuasar } from 'quasar'
+import VueEasyLightbox from 'vue-easy-lightbox'
 
 const $q = useQuasar()
 const route = useRoute()
@@ -95,6 +109,8 @@ const router = useRouter()
 const conviteStore = useConvitesStore()
 const cartStore = useCartStore()
 
+const lightboxVisible = ref(false)
+const lightboxIndex = ref(0)
 const slide = ref(0)
 
 const conviteOrder = ref<number>(1)
@@ -157,5 +173,9 @@ function onConviteOrder() {
       router.push({ name: 'CarrinhoView' })
     })
     .onCancel(() => {})
+}
+function openLightbox(i: number) {
+  lightboxIndex.value = i
+  lightboxVisible.value = true
 }
 </script>
